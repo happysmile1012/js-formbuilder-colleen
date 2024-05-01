@@ -369,51 +369,117 @@ function joinValues() {
             let scanneddLab = getValue(112430830);          // Have new/corrected labs been scanned in?
             let processingNote = getValue(112430870);       // Have they been validated and a processing note is in PIMS?
             let haveLabs = getValue(112430902);             // Have labs
+
             let cpeptideResult = getValue(112431042);       // Are the labs scanned under C-Peptide results?
             let labScanned = getValue(112431208);           // Where are the labs scanned?
             let labScannedDate = getValue(112431213);       // What date were the labs scanned?
             let labDrawnDate = getValue(112431214);         // What dates were the labs drawn?
+            let onPage = getValue(113049411);               // On page
+            let isPatientFasting = getValue(113048802);     // Is the patient fasting?
+            let whatisFastingBlood = getValue(112431241);   // What is the patient's fasting blood glucose reading?
+            let whatPageisFasting = getValue(112431243);    // What page is the fasting blood glucose rading on?
+            let isResultLess225 = getValue(112761604);      // Is the result less than or equal 225?
+            let isTheResultLess110 = getValue(112761221);   // Is the result less than or equal to 110% of the lower range?
+            
+            let betaCellTestResult = getValue(112431245);   // Are you including Beta Cell Test Results?
+            let betaCellName = getValue(112431249);         // Name of Beta Cell Test:
+            let betaCellResult = getValue(112431254);       // Result of Beta Cell Test:
+            let betaCellRange = getValue(112431271);        // Range of Beta Cell Test:
+
+            let incCreatinine = getValue(112431272);        // Are you also including Creatinine Clearance/GFR?
+            let dateGFR = getValue(112431280);              // What is the date the GFR was collected?
+            let testGFR = getValue(112431282);              // What is the GFR test result?
+            let clinicalNotestate = getValue(112431283);    // Do the clinical notes state the patient has renal insufficiency?
+            let pageRenalInsuff = getValue(112431291);      // What page is renal insufficiency mentioned on?
+            let resultMention = getValue(112431360);        // You cannot use this result without mention of renal insufficiency in the clinical notes.
 
             let note = `     `;
             let isNoteAdded = false;
+            let isComma = false;
 
             if (requireLab !== "") {
                 note = note + `Does this order require labs?  ${requireLab}`;
                 isNoteAdded = true;
+                isComma = true;
             }
                 
             if (scanneddLab !== "") {
-                note = note + `, Have new/corrected labs been scanned in?  ${scanneddLab}`;
+                note = note + `${isComma ? ", " : ""}Have new/corrected labs been scanned in?  ${scanneddLab}`;
                 isNoteAdded = true;
+                isComma = true;
             }
             
             if (processingNote !== "") {
-                note = note + `, Have they been validated and a processing note is in PIMS?  ${processingNote}`;
+                note = note + `${isComma ? ", " : ""}Have they been validated and a processing note is in PIMS?  ${processingNote}`;
                 isNoteAdded = true;
+                isComma = true;
             }
         
             if (haveLabs !== "") {
-                note = note + `, Have labs  ${haveLabs}`;
+                note = note + `${isComma ? ", " : ""}Have labs  ${haveLabs}`;
                 isNoteAdded = true;
+                isComma = true;
             }
         
-            if (cpeptideResult !== "") {
-                note = note + `, Are the labs scanned under C-Peptide results?  ${cpeptideResult}`;
+            // -----------------
+
+            if (cpeptideResult === "Yes") {
+                note = note + `${isComma ? ", " : ""}Labs scanned under C-Peptide test Results`;
+                isComma = true;
+
+                if (labScanned !== "") {
+
+                }
+
+                if (labScannedDate !== "") {
+                    note = note + ` on ${labScannedDate}`;
+                }
+
+                if (labDrawnDate !== "") {
+                    note = note + ` labs drawn on ${labDrawnDate}`;
+                }
+
+                if (onPage !== "") {
+                    note = note + ` on page ${onPage}`;
+                }
+
+                if (isPatientFasting !== "") {
+                    note = note + `, Fasting: (${isPatientFasting})`;
+                }
+
+                if (whatisFastingBlood !== "") {
+                    note = note + `, Glucose: ${whatisFastingBlood}`;
+                }
+
+                if (whatPageisFasting !== "") {
+                    note = note + ` on page (${whatPageisFasting})`;
+                }
+
+                if (isResultLess225 !== "" && isTheResultLess110 !== "") {
+                    let result225 = isResultLess225 === "Yes – FBG is valid.  Review to see if Labs where drawn fasting and concurrent" ? "Yes" : "No";
+                    note = note + `, C-Pep RESULT (RANGE) - ${isTheResultLess110} to 110% and ${result225} for Glucose for 225.`;
+                }
+
                 isNoteAdded = true;
             }
-        
-            if (labScanned !== "") {
-                note = note + `, Where are the labs scanned?  ${labScanned}`;
+
+            if (betaCellTestResult === "Yes") {
+                note = note + `${isComma ? ", " : ""}Beta Cell Test Name: (${betaCellName}) Result: (${betaCellResult}) Range: (${betaCellRange}) - Beta Cell Questions`;
                 isNoteAdded = true;
+                isComma = true;
             }
-        
-            if (labScannedDate !== "") {
-                note = note + `, What date were the labs scanned?  ${labScannedDate}`;
-                isNoteAdded = true;
-            }
-        
-            if (labDrawnDate !== "") {
-                note = note + `, What dates were the labs drawn?  ${labDrawnDate}`;
+
+            if (incCreatinine === "Yes") {
+                note = note + `${isComma ? ", " : ""}Creatinine Clearance/GFR collected ${dateGFR}, (${testGFR})`;
+                isComma = true;
+
+                if (clinicalNotestate !== "") {
+                    if (clinicalNotestate === "Yes") {
+                        note = note + ` Clinicals notes scanned ${dateGFR} mention renal insufficiency on page (${pageRenalInsuff})`;
+                    } else {
+                        note = note + ` ${resultMention}`;
+                    }
+                }
                 isNoteAdded = true;
             }
 
@@ -756,7 +822,7 @@ function joinValues() {
             let clinicalNotestate = getValue(112431283);    // Do the clinical notes state the patient has renal insufficiency?
             let pageRenalInsuff = getValue(112431291);      // What page is renal insufficiency mentioned on?
             let resultMention = getValue(112431360);        // You cannot use this result without mention of renal insufficiency in the clinical notes.
-            // let whatCorrtNeeded = getValue(112648848);      // What corrections are needed?
+            let whatCorrtNeeded = getValue(112648848);      // What corrections are needed?
 
             let isResultLessEq225 = getValue(112761604);    // Is the result less than or equal 225?
             let wereTheLabsDrawn = getValue(112761651);     // Were the labs drawn concurrent?
@@ -939,56 +1005,56 @@ function joinValues() {
                 isComma = true;
             }
 
-            if (betaCellTestResult !== "") {
-                note = note + `${isComma ? ', ' : ''}Are you including Beta Cell Test Results? ${betaCellTestResult}`;
-                isComma = true;
-            }
+            // if (betaCellTestResult !== "") {
+            //     note = note + `${isComma ? ', ' : ''}Are you including Beta Cell Test Results? ${betaCellTestResult}`;
+            //     isComma = true;
+            // }
 
-            if (betaCellTestResult === "Yes") {
-                if (betaCellName !== "") {
-                    note = note + `${isComma ? ', ' : ''}Name of Beta Cell Test: ${betaCellName}`;
-                    isComma = true;
-                }
+            // if (betaCellTestResult === "Yes") {
+            //     if (betaCellName !== "") {
+            //         note = note + `${isComma ? ', ' : ''}Name of Beta Cell Test: ${betaCellName}`;
+            //         isComma = true;
+            //     }
                 
-                if (betaCellResult !== "") {
-                    note = note + `${isComma ? ', ' : ''}Result of Beta Cell Test: ${betaCellResult}`;
-                    isComma = true;
-                }
+            //     if (betaCellResult !== "") {
+            //         note = note + `${isComma ? ', ' : ''}Result of Beta Cell Test: ${betaCellResult}`;
+            //         isComma = true;
+            //     }
                 
-                if (betaCellRange !== "") {
-                    note = note + `${isComma ? ', ' : ''}Range of Beta Cell Test: ${betaCellRange}`;
-                    isComma = true;
-                }
-            }
+            //     if (betaCellRange !== "") {
+            //         note = note + `${isComma ? ', ' : ''}Range of Beta Cell Test: ${betaCellRange}`;
+            //         isComma = true;
+            //     }
+            // }
 
-            if (incCreatinine !== "") {
-                note = note + `${isComma ? ', ' : ''}Are you also including Creatinine Clearance/GFR? ${incCreatinine}`;
-                isComma = true;
-            }
+            // if (incCreatinine !== "") {
+            //     note = note + `${isComma ? ', ' : ''}Are you also including Creatinine Clearance/GFR? ${incCreatinine}`;
+            //     isComma = true;
+            // }
             
-            if (incCreatinine === "Yes") {
-                if (dateGFR !== "") {
-                    note = note + `${isComma ? ', ' : ''}What is the date the GFR was collected? ${dateGFR}`;
-                    isComma = true;
-                }
+            // if (incCreatinine === "Yes") {
+            //     if (dateGFR !== "") {
+            //         note = note + `${isComma ? ', ' : ''}What is the date the GFR was collected? ${dateGFR}`;
+            //         isComma = true;
+            //     }
 
-                if (testGFR !== "") {
-                    note = note + `${isComma ? ', ' : ''}What is the GFR test result? ${testGFR}`;
-                    isComma = true;
-                }
-            }
+            //     if (testGFR !== "") {
+            //         note = note + `${isComma ? ', ' : ''}What is the GFR test result? ${testGFR}`;
+            //         isComma = true;
+            //     }
+            // }
 
-            if (clinicalNotestate === "Yes") {
-                if (pageRenalInsuff !== "") {
-                    note = note + `${isComma ? ', ' : ''}What page is renal insufficiency mentioned on? ${pageRenalInsuff}`;
-                    isComma = true;
-                }
-            } else {
-                if (resultMention !== "") {
-                    note = note + `${isComma ? ', ' : ''}You cannot use this result without mention of renal insufficiency in the clinical notes. ${resultMention}`;
-                    isComma = true;
-                }
-            }
+            // if (clinicalNotestate === "Yes") {
+            //     if (pageRenalInsuff !== "") {
+            //         note = note + `${isComma ? ', ' : ''}What page is renal insufficiency mentioned on? ${pageRenalInsuff}`;
+            //         isComma = true;
+            //     }
+            // } else {
+            //     if (resultMention !== "") {
+            //         note = note + `${isComma ? ', ' : ''}You cannot use this result without mention of renal insufficiency in the clinical notes. ${resultMention}`;
+            //         isComma = true;
+            //     }
+            // }
 
             // if (clinicalNoteValid !== "") {
             //     note = note + `${isComma ? ', ' : ''}Are the Clinical Notes Valid? ${clinicalNoteValid}`;
