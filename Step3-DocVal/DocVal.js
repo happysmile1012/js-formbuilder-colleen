@@ -529,7 +529,6 @@ function joinValues() {
             let pwoStartDate = getValue(112323597);             // What is the start date of the PWO?
             let isDiagnosisCode = getValue(112323599);          // What is the diagnosis code?
             let diagnosisCode1 = getValue(112375535);           // Diagnosis Code
-            let siteChangeInstruction = getValue(112430683);    // What are the site change instructions?
             let siteChange = getValue(112323602);               // Are site change instructions per manufacturer’s directions”?
             let treatingDoctorSignedPwo = getValue(112323619);  // Who is the treating Doctor that signed the PWO?
             let datePwoSigned = getValue(112323620);            // What is the date the PWO was signed?
@@ -557,9 +556,12 @@ function joinValues() {
             let visitDate = getValue(112323785);                        // What is the visit date on the clinical notes?
             let isDiagnosisCode = getValue(112323786);                  // What is the diagnosis code?
             let diagnosisCode = getValue(112375880);                    // Diagnosis Code
+            let siteChangeInstruction = getValue(112430683);            // What are the site change instructions?
             let usingInsulin = getValue(112323807);                     // Do the Clinical Notes state the patient is using insulin?
             let onPage = getValue(112323837);                           // On page:
             let hypoglycemicEvent = getValue(112323854);                // Does the patient have hypoglycemic events?
+            let testFreq2Mth = getValue(113035642);                     // Patient Testing Frequency for the past 2 months
+            let injectFreq6Mth = getValue(113035644);                   // Patient Injection Frequency for the past 6 months
             let clinicalNotes = getValue(112323923);                    // Clinical Notes are:
             let signedByElectronical = getValue(112323926);             // Electronically signed by:
             let onPage1 = getValue(112323944);                          // On page:
@@ -601,48 +603,36 @@ function joinValues() {
                 }
     
                 if (datePIMS !== "") {
-                    note = note + `${isComma ? `, ` : ``}Date is scanned into PIMS ${datePIMS}`;
+                    note = note + `${isComma ? `, ` : ``}Office notes scanned under Clinical Notes (${datePIMS})`;
                     isComma = true;
                 }
     
                 if (visitDate !== "") {
-                    note = note + `${isComma ? `, ` : ``}Visit date on the clinical notes? ${visitDate}`;
-                    isComma = true;
+                    note = note + ` for (${visitDate}) visit:`;
                 }
     
                 if (isDiagnosisCode !== "" || diagnosisCode !== "") {
-                    note = note + `${isComma ? `, ` : ``}Diagnosis Code: ${isDiagnosisCode} ${diagnosisCode}`;
+                    note = note + ` show (${isDiagnosisCode} ${diagnosisCode})`;
+                }
+
+                if (testFreq2Mth !== "" && injectFreq6Mth !== "") {
+                    note = note + `${isComma ? `, ` : ``}Testing (${testFreq2Mth}) for at least 2 months on page (${onPage1}) and (${injectFreq6Mth}) for 6 months on page (${onPage2}).`;
                     isComma = true;
                 }
     
-                if (usingInsulin !== "") {
-                    note = note + `${isComma ? `, ` : ``}${usingInsulin}`;
-                    isComma = true;
-                }
+                // if (usingInsulin !== "") {
+                //     note = note + `${isComma ? `, ` : ``}${usingInsulin}`;
+                //     isComma = true;
+                // }
     
                 if (clinicalNotes !== "") {
-                    note = note + `${isComma ? `, ` : ``}Clinical Notes are: ${clinicalNotes}`;
-                    isComma = true;
+                    if (clinicalNotes === "Electronically signed") {
+                      note = note + ` Electronic signature (${signedByElectronical}/${onPage1}).`;
+                    }
                 }
     
-                if (signedByElectronical !== "") {
-                    note = note + `${isComma ? `, ` : ``}Electronically signed by: ${signedByElectronical}`;
-                    isComma = true;
-                }
-    
-                if (onPage1 !== "") {
-                    note = note + `${isComma ? `, ` : ``}On page: ${onPage1}`;
-                    isComma = true;
-                }
-    
-                if (isAttestation !== "") {
-                    note = note + `${isComma ? `, ` : ``}Attestation Scanned ${attestationScanned}`;
-                    isComma = true;
-                }
-    
-                if (onPage2 !== "") {
-                    note = note + `${isComma ? `, ` : ``}On page: ${onPage2}`;
-                    isComma = true;
+                if (isAttestation === "Yes") {
+                    note = note + ` OR Attestation Scanned (${attestationScanned}/${onPage2})`;
                 }
             }
 
