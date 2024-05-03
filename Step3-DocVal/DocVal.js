@@ -842,22 +842,22 @@ function joinValues() {
 
             let note = `     `;
             if (cPeptideResult !== "") {
-                note = note + `What is the C-Peptide result? ${cPeptideResult}`;
+                note = note + `C-Peptide result? ${cPeptideResult}`;
                 isComma = true;
             }
             
             if (cPeptideRange !== "") {
-                note = note + `${isComma ? ', ' : ''}What is the C-Peptide Range? ${cPeptideRange}`;
+                note = note + `${isComma ? ', ' : ''}C-Peptide Range? ${cPeptideRange}`;
                 isComma = true;
             }
             
             if (cPeptideRangeLow !== "") {
-                note = note + `${isComma ? ', ' : ''}C-Peptide Range (Low): ${cPeptideRangeLow}`;
+                note = note + `${isComma ? ', ' : ''}(Low): ${cPeptideRangeLow}`;
                 isComma = true;
             }
             
             if (cPeptideRangeHigh !== "") {
-                note = note + `${isComma ? ', ' : ''}C-Peptide Range (High): ${cPeptideRangeHigh}`;
+                note = note + `${isComma ? ', ' : ''}(High): ${cPeptideRangeHigh}`;
                 isComma = true;
             }
             
@@ -874,7 +874,7 @@ function joinValues() {
                 }));
             
                 if (calcCPeptideResultValPercent !== "") {
-                    note = note + `${isComma ? ', ' : ''}C-Peptide result: ${calcCPeptideResultValPercent}`;
+                    note = note + `${isComma ? ', ' : ''}Result: ${calcCPeptideResultValPercent}`;
                     isComma = true;
                 }
 
@@ -929,25 +929,25 @@ function joinValues() {
             }
 
             if (doLabpatientWas !== "") {
-                note = note + `${isComma ? ', ' : ''}Do the labs state that the patient was fasting? ${doLabpatientWas}`;
+                note = note + `${isComma ? ', ' : ''}${doLabpatientWas}`;
                 isComma = true;
             }
 
             if (doLabpatientWas === "Patient was fasting") {
                 if (fastingNoteonPage !== "") {
-                    note = note + `${isComma ? ', ' : ''}What page is the fasting note on? ${fastingNoteonPage}`;
+                    note = note + `${isComma ? ', ' : ''}${fastingNoteonPage}`;
                     isComma = true;
                 }
                 
                 if (fastingBlood !== "") {
-                    note = note + `${isComma ? ', ' : ''}What is the patient's fasting blood glucose reading? ${fastingBlood}`;
+                    note = note + `${isComma ? ', ' : ''}Fasting blood glucose reading? ${fastingBlood}`;
                     isComma = true;
                 }
 
-                if (fastingBlookPage !== "") {
-                    note = note + `${isComma ? ', ' : ''}What page is the fasting blood glucose reading on? ${fastingBlookPage}`;
-                    isComma = true;
-                }
+                // if (fastingBlookPage !== "") {
+                //     note = note + `${isComma ? ', ' : ''}What page is the fasting blood glucose reading on? ${fastingBlookPage}`;
+                //     isComma = true;
+                // }
             }
             
             if (isResultLessEq225 !== "") {
@@ -981,12 +981,12 @@ function joinValues() {
             }
             
             if (isResultLess110 !== "") {
-                note = note + `${isComma ? ', ' : ''}Is the result less than or equal to 110% of the lower range? ${isResultLess110}`;
+                note = note + `${isComma ? ', ' : ''}Result less than or equal to 110% of the lower range? ${isResultLess110}`;
                 isComma = true;
             }
             
             if (isResultLess200 !== "") {
-                note = note + `${isComma ? ', ' : ''}Is the result less than or equal to 200% of the lower range? ${isResultLess200}`;
+                note = note + `${isComma ? ', ' : ''}Result less than or equal to 200% of the lower range? ${isResultLess200}`;
                 isComma = true;
             }
             
