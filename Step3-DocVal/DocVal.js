@@ -297,7 +297,7 @@ function joinValues() {
                         isValidTestLogs = true;
                     }
                 } else if (insuranceItems[i] === "Labs") {
-                    combinedString.push(`   ${i + 2}. ${haveLabs}`);
+                    combinedString.push(`   ${i + 2}. Have Labs`);
 
                     if (haveLabs === "Have Labs - Validated" || haveLabs === "Have Labs - Needs Review") {
                       isValidLabs = true;
@@ -627,7 +627,9 @@ function joinValues() {
             let onPage = getValue(112323837);                           // On page:
             let hypoglycemicEvent = getValue(112323854);                // Does the patient have hypoglycemic events?
             let testFreq2Mth = getValue(113035642);                     // Patient Testing Frequency for the past 2 months
+            let testFreq2MthPage = getValue(113037492);                 // On page:
             let injectFreq6Mth = getValue(113035644);                   // Patient Injection Frequency for the past 6 months
+            let injectFreq6MthPage = getValue(113037493);               // On Page:
             let clinicalNotes = getValue(112323923);                    // Clinical Notes are:
             let signedByElectronical = getValue(112323926);             // Electronically signed by:
             let onPage1 = getValue(112323944);                          // On page:
@@ -682,7 +684,7 @@ function joinValues() {
                 }
 
                 if (testFreq2Mth !== "" && injectFreq6Mth !== "") {
-                    note = note + `${isComma ? `, ` : ``}Testing (${testFreq2Mth}) for at least 2 months on page (${onPage1}) and (${injectFreq6Mth}) for 6 months on page (${onPage2}).`;
+                    note = note + `${isComma ? `, ` : ``}Testing (${testFreq2Mth}) for at least 2 months on page (${testFreq2MthPage}) and (${injectFreq6Mth}) for 6 months on page (${injectFreq6MthPage}).`;
                     isComma = true;
                 }
     
@@ -880,51 +882,47 @@ function joinValues() {
 
 
                 if (calcCPeptideResultVal <= 110) {
-                  document.getElementById(cPeptideRangeLowHash + "_0").checked = true;
-                  document.getElementById(cPeptideRangeLowHash + "_0").nextSibling.setAttribute("aria-checked", true);
-                  document.getElementById(cPeptideRangeLowHash + "_0").parentElement.parentElement.setAttribute("data-is-checked", "1");
-                  document.getElementById(cPeptideRangeLowHash + "_1").checked = false;
-                  document.getElementById(cPeptideRangeLowHash + "_1").nextSibling.setAttribute("aria-checked", false);
-                  document.getElementById(cPeptideRangeLowHash + "_1").parentElement.parentElement.setAttribute("data-is-checked", "0");
-                  isResultLess110 = "Yes";
-                  // loader.engine.document.getElementById(112761221).setValue(({
-                  //     "value": "Yes"
-                  // }));
+                  // document.getElementById(cPeptideRangeLowHash + "_0").checked = true;
+                  // document.getElementById(cPeptideRangeLowHash + "_0").nextSibling.setAttribute("aria-checked", true);
+                  // document.getElementById(cPeptideRangeLowHash + "_0").parentElement.parentElement.setAttribute("data-is-checked", "1");
+                  // document.getElementById(cPeptideRangeLowHash + "_1").checked = false;
+                  // document.getElementById(cPeptideRangeLowHash + "_1").nextSibling.setAttribute("aria-checked", false);
+                  // document.getElementById(cPeptideRangeLowHash + "_1").parentElement.parentElement.setAttribute("data-is-checked", "0");
+                  // isResultLess110 = "Yes";
+
+                  document.getElementById("radio-" + cPeptideRangeLowHash + "0").click();
                 } else {
-                  document.getElementById(cPeptideRangeLowHash + "_0").checked = false;
-                  document.getElementById(cPeptideRangeLowHash + "_0").nextSibling.setAttribute("aria-checked", false);
-                  document.getElementById(cPeptideRangeLowHash + "_0").parentElement.parentElement.setAttribute("data-is-checked", "0");
-                  document.getElementById(cPeptideRangeLowHash + "_1").checked = true;
-                  document.getElementById(cPeptideRangeLowHash + "_1").nextSibling.setAttribute("aria-checked", true);
-                  document.getElementById(cPeptideRangeLowHash + "_1").parentElement.parentElement.setAttribute("data-is-checked", "1");
-                  isResultLess110 = "No";
-                  // loader.engine.document.getElementById(112761221).setValue(({
-                  //     "value": "No"
-                  // }));
+                  // document.getElementById(cPeptideRangeLowHash + "_0").checked = false;
+                  // document.getElementById(cPeptideRangeLowHash + "_0").nextSibling.setAttribute("aria-checked", false);
+                  // document.getElementById(cPeptideRangeLowHash + "_0").parentElement.parentElement.setAttribute("data-is-checked", "0");
+                  // document.getElementById(cPeptideRangeLowHash + "_1").checked = true;
+                  // document.getElementById(cPeptideRangeLowHash + "_1").nextSibling.setAttribute("aria-checked", true);
+                  // document.getElementById(cPeptideRangeLowHash + "_1").parentElement.parentElement.setAttribute("data-is-checked", "1");
+                  // isResultLess110 = "No";
+
+                  document.getElementById("radio-" + cPeptideRangeLowHash + "1").click();
                 }
 
                 if (calcCPeptideResultVal <= 200) {
-                  document.getElementById(cPeptideRangeHighHash + "_0").checked = true;
-                  document.getElementById(cPeptideRangeHighHash + "_0").nextSibling.setAttribute("aria-checked", true);
-                  document.getElementById(cPeptideRangeHighHash + "_0").parentElement.parentElement.setAttribute("data-is-checked", "1");
-                  document.getElementById(cPeptideRangeHighHash + "_1").checked = false;
-                  document.getElementById(cPeptideRangeHighHash + "_1").nextSibling.setAttribute("aria-checked", false);
-                  document.getElementById(cPeptideRangeHighHash + "_1").parentElement.parentElement.setAttribute("data-is-checked", "0");
-                  isResultLess200 = "Yes";
-                  // loader.engine.document.getElementById(112761457).setValue(({
-                  //     "value": "Yes"
-                  // }));
+                  // document.getElementById(cPeptideRangeHighHash + "_0").checked = true;
+                  // document.getElementById(cPeptideRangeHighHash + "_0").nextSibling.setAttribute("aria-checked", true);
+                  // document.getElementById(cPeptideRangeHighHash + "_0").parentElement.parentElement.setAttribute("data-is-checked", "1");
+                  // document.getElementById(cPeptideRangeHighHash + "_1").checked = false;
+                  // document.getElementById(cPeptideRangeHighHash + "_1").nextSibling.setAttribute("aria-checked", false);
+                  // document.getElementById(cPeptideRangeHighHash + "_1").parentElement.parentElement.setAttribute("data-is-checked", "0");
+                  // isResultLess200 = "Yes";
+                  
+                  document.getElementById("radio-" + cPeptideRangeHighHash + "0").click();
                 } else {
-                  document.getElementById(cPeptideRangeHighHash + "_0").checked = false;
-                  document.getElementById(cPeptideRangeHighHash + "_0").nextSibling.setAttribute("aria-checked", false);
-                  document.getElementById(cPeptideRangeHighHash + "_0").parentElement.parentElement.setAttribute("data-is-checked", "0");
-                  document.getElementById(cPeptideRangeHighHash + "_1").checked = true;
-                  document.getElementById(cPeptideRangeHighHash + "_1").nextSibling.setAttribute("aria-checked", true);
-                  document.getElementById(cPeptideRangeHighHash + "_1").parentElement.parentElement.setAttribute("data-is-checked", "1");
-                  isResultLess200 = "No";
-                  // loader.engine.document.getElementById(112761457).setValue(({
-                  //     "value": "No"
-                  // }));
+                  // document.getElementById(cPeptideRangeHighHash + "_0").checked = false;
+                  // document.getElementById(cPeptideRangeHighHash + "_0").nextSibling.setAttribute("aria-checked", false);
+                  // document.getElementById(cPeptideRangeHighHash + "_0").parentElement.parentElement.setAttribute("data-is-checked", "0");
+                  // document.getElementById(cPeptideRangeHighHash + "_1").checked = true;
+                  // document.getElementById(cPeptideRangeHighHash + "_1").nextSibling.setAttribute("aria-checked", true);
+                  // document.getElementById(cPeptideRangeHighHash + "_1").parentElement.parentElement.setAttribute("data-is-checked", "1");
+                  // isResultLess200 = "No";
+
+                  document.getElementById("radio-" + cPeptideRangeHighHash + "1").click();
                 }
             }
 
