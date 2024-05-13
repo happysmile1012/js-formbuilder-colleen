@@ -138,9 +138,16 @@ function joinValues() {
          * Phone Number
          */
         const convertPhoneNumber = () => {
-            let phoneNum = getVal(112240192);
+            let phoneNum = getValue(112240192);
             if (phoneNum !== null && phoneNum !== "") {
                 combinedString.push(`Pharmacy's phone number: ${phoneNum}.`);
+            }
+        }
+
+        const convertSeventhLine = () => {
+            let reason = getValue(112262767); // Please list reasons the patient does not want CCS to manage their prescriptions
+            if (reason !== null && reason !== "") {
+                combinedString.push(`Reason: ${reason}.`);
             }
         }
 
@@ -153,6 +160,7 @@ function joinValues() {
             convertFivthLine();
             convertPhoneNumber();
             convertSixthLine();
+            convertSeventhLine();
         }
         // const doConvertResult = () => {
         //     let fieldCnt = fields.length;

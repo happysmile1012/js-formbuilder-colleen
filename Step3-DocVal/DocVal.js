@@ -229,9 +229,11 @@ function joinValues() {
             let isPWOValid = getValue(112375817);           // Is the PWO valid?
             let isF2FValid = getValue(112648834);           // Is Face to Face valid?
             let isCNValid = getValue(112648846);            // Are the Clinical Notes Valid?
+            let isLabValid = getValue(113136848);           // Are the labs valid?
             let whatCorrectNeedPWO = getValue(112375819);   // What corrections are needed? - PWO
-            let whatCorrectNeedCN = getValue(112648848);    // What corrections are needed? - CN
+            let whatCorrectNeedCN = getValue(113138061);    // What corrections are needed? - CN
             let whatCorrectNeedF2F = getValue(112648843);   // What corrections are needed? - F2F
+            let whatCorrectNeedLabs = getValue(112648848);  // What corrections are needed? - Labs
             let insurances = getValue(112323110);           // What documentation does the insurance checklist show is required for this order?  (Select all that apply)
             let insuranceItems = insurances.split(',');
             let insuranceCnt = insuranceItems.length;
@@ -244,7 +246,7 @@ function joinValues() {
                         whatCorrectNeedPWO = `- ` + whatCorrectNeedPWO;
 
                     if (isPWOValid === "Need Corrected PWO") {
-                        combinedString.push(`   ${i + 2}. Needs Corrected PWO ${whatCorrectNeedPWO}`);
+                        combinedString.push(`   ${i + 2}. Need Corrected PWO ${whatCorrectNeedPWO}`);
                     } else {
                         if (isPWOValid !== "") {
                             combinedString.push(`   ${i + 2}. ${isPWOValid} ${whatCorrectNeedPWO}`);
@@ -261,7 +263,7 @@ function joinValues() {
                         whatCorrectNeedCN = `- ` + whatCorrectNeedCN;
 
                     if (isCNValid === "Need Corrected Clinical Notes") {
-                        combinedString.push(`   ${i + 2}. Needs Corrected Clinical Notes ${whatCorrectNeedCN}`);
+                        combinedString.push(`   ${i + 2}. Need Corrected Clinical Notes ${whatCorrectNeedCN}`);
                     } else {
                         if (isCNValid !== "") {
                             combinedString.push(`   ${i + 2}. ${isCNValid} ${whatCorrectNeedCN}`);
@@ -278,7 +280,7 @@ function joinValues() {
                         whatCorrectNeedF2F = `- ` + whatCorrectNeedF2F;
 
                     if (isF2FValid === "Need Corrected Face to Face") {
-                        combinedString.push(`   ${i + 2}. Needs Corrected Face to Face ${whatCorrectNeedF2F}`);
+                        combinedString.push(`   ${i + 2}. Need Corrected Face to Face ${whatCorrectNeedF2F}`);
                     } else {
                         if (isF2FValid !== "") {
                             combinedString.push(`   ${i + 2}. ${isF2FValid} ${whatCorrectNeedF2F}`);
@@ -297,7 +299,18 @@ function joinValues() {
                         isValidTestLogs = true;
                     }
                 } else if (insuranceItems[i] === "Labs") {
-                    combinedString.push(`   ${i + 2}. Have Labs`);
+                    if (whatCorrectNeedLabs !== "")
+                        whatCorrectNeedLabs = `- ` + whatCorrectNeedLabs;
+                     
+                    if (isLabValid === "Need Corrected Labs") {
+                      combinedString.push(`   ${i + 2}. Need Corrected Labs ${whatCorrectNeedLabs}`);
+                    } else {
+                        if (isLabValid !== "") {
+                            combinedString.push(`   ${i + 2}. ${isLabValid} ${whatCorrectNeedLabs}`);
+                        } else {
+                            combinedString.push(`   ${i + 2}. ${haveLabs} ${whatCorrectNeedLabs}`);
+                        }
+                    }
 
                     if (haveLabs === "Have Labs - Validated" || haveLabs === "Have Labs - Needs Review") {
                       isValidLabs = true;
@@ -381,6 +394,8 @@ function joinValues() {
             let isResultLess225 = getValue(112761604);      // Is the result less than or equal 225?
             let isTheResultLess110 = getValue(112761221);   // Is the result less than or equal to 110% of the lower range?
             
+            let cpeptideGlucoseDawn = getValue(113121752);  // Were the c-peptide and glucose drawn concurrently?
+
             let betaCellTestResult = getValue(112431245);   // Are you including Beta Cell Test Results?
             let betaCellName = getValue(112431249);         // Name of Beta Cell Test:
             let betaCellResult = getValue(112431254);       // Result of Beta Cell Test:
@@ -461,6 +476,12 @@ function joinValues() {
                 }
 
                 isNoteAdded = true;
+            }
+
+            if (cpeptideGlucoseDawn !== "") {
+                note = note + `${isComma ? ", " : ""}Were the c-peptide and glucose drawn concurrently? ${cpeptideGlucoseDawn}`;
+                isNoteAdded = true;
+                isComma = true;
             }
 
             if (betaCellTestResult === "Yes") {
