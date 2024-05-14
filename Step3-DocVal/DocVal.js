@@ -114,6 +114,7 @@ function joinValues() {
             let whatAttempt = getValue(112323076);              // What attempt is this?
             let isParachuteOrder = getValue(112323077);         // Review the Workflow and special handling notes on the documentation tab.  Is this a Parachute Push Order?
             let patientIs = getValue(112323375);                // Patient is:
+            let patientIs2 = getValue(112431416);               // Patient is:
             // let requestDocTab = getValue(112343914);     // Removed
             // let pushToParachute = getValue(112343929);   // Removed
 
@@ -186,6 +187,11 @@ function joinValues() {
                 isComma = true;
             }
 
+            if (patientIs2 !== "") {
+                note = note + `${isComma ? `, ` : ``}Patient is ${patientIs2}`;
+                isComma = true;
+            }
+
             combinedString.push(`     `);
             combinedString.push(note);
         }
@@ -196,10 +202,17 @@ function joinValues() {
          */
         const convertThirdLine = () => {
             let insurances = getValue(112323110);           // What documentation does the insurance checklist show is required for this order?  (Select all that apply)
+            let otherDocument = getValue(112323129);        // Other documentation
             let isuranceItems = insurances.replaceAll(',', ' - ');
 
+            let note = `Insurance Requires: ${isuranceItems}`;
+
+            if (otherDocument !== "") {
+                note = note + `, Other documentation: ${otherDocument}`;
+            }
+
             combinedString.push(`     `);
-            combinedString.push(`Insurance Requires: ${isuranceItems}`);
+            combinedString.push(note);
         }
 
         /**
@@ -332,49 +345,6 @@ function joinValues() {
             combinedString.push(`     `);
             combinedString.push(`   ${insuranceCnt + 2}. Need Packet approval`);
             // }
-        }
-
-        /**
-         * Pwo Line
-         * 2. Have PWO
-         */
-        const convertPwoLine = () => {
-            let isCorrectPwoScaned = getValue(112323226);       // Has a new/corrected PWO been scanned in?
-            let needPwo = getValue(112323242);                  // Need PWO
-            let hasPwoValid = getValue(112323265);              // Has the PWO been validated, and processing notes are in PIMS?
-            let havePwo = getValue(112323282);                  // Have PWO
-            let copyProcessingNote = (112323293);               // Copy processing notes here:
-            // let validPwo = getValue(112323327);                 // Validate PWO
-            let enhancedPwo = getValue(112323331);              // Did the HCP use the Enhanced PWO?
-            let useInsulin = getValue(112323362);               // Does the PWO state the patient is using insulin?
-            let haveHypoglycemic = getValue(112323371);         // Does the patient have hypoglycemic events?
-
-            if (isCorrectPwoScaned === "Yes")
-                combinedString.push(`     Has a new/corrected PWO been scanned in?: ${isCorrectPwoScaned}`);
-
-            if (hasPwoValid === "Yes")
-                combinedString.push(`     Has the PWO been validated, and processing notes are in PIMS?: ${hasPwoValid}`);
-
-            if (havePwo === "Yes")
-                combinedString.push(`     ${havePwo}`);
-
-            if (copyProcessingNote !== "")
-                combinedString.push(`     Processing Notes: ${copyProcessingNote}`);
-
-            if (enhancedPwo === "Yes")
-                combinedString.push(`     Did the HCP use the Enhanced PWO?: ${enhancedPwo}`)
-            else if (enhancedPwo === "No")
-                combinedString.push(`     Did the HCP use the Enhanced PWO?: ${enhancedPwo}`)
-
-            if (useInsulin === "Yes PWO states Patient using insulin")
-                combinedString.push(`     Patient is using insulin`);
-            else if (useInsulin === "No") {
-                if (haveHypoglycemic === "Yes – the patient has hypoglycemic episodes")
-                    combinedString.push(`     The patient has hypoglycemic episodes`);
-                else if (haveHypoglycemic === "No – Patient does not qualify – advised patient and cancelled workflow")
-                    combinedString.push(`     Patient does not qualify – advised patient and cancelled workflow`);
-            }
-
         }
 
         const convertLabLine = () => {
@@ -530,7 +500,9 @@ function joinValues() {
             let outcome1 = getValue(112481954);                 // Outcome
             let spokeTo2 = getValue(112481970);                 // Spoke to:
             let outcome2 = getValue(112481972);                 // Outcome
-            let actionTakens = getValue(112342184);
+            let percentCoverage = getValue(113223188);          // What is the percentage of coverage?
+            let patientResponsibility = getValue(113223193);    // What is the expected patient responsibility?
+            let actionTakens = getValue(112342184);             // Action Taken: (Select all that apply)
             let otherActionTaken = getValue(112607191);         // Other Action Taken:
 
             combinedString.push(`     `);
@@ -599,6 +571,16 @@ function joinValues() {
                 actionsTakenNoteComma = true;
             }
 
+            if (percentCoverage !== "") {
+                actionsTakenNote = actionsTakenNote + `${actionsTakenNoteComma ? `, ` : ``}` + `Percentage of coverage: ${percentCoverage}`;
+                actionsTakenNoteComma = true;
+            }
+
+            if (patientResponsibility !== "") {
+                actionsTakenNote = actionsTakenNote + `${actionsTakenNoteComma ? `, ` : ``}` + `Expected patient responsibility: ${patientResponsibility}`;
+                actionsTakenNoteComma = true;
+            }
+
             if (actionsTakenNote !== "") {
                 combinedString.push(`     Actions Taken: ${actionsTakenNote}`);
             }
@@ -606,13 +588,16 @@ function joinValues() {
 
         const convertPWOProcessingNote = () => {
 
-            let havePwo = getValue(112847017);              // PWO
-            let copyProcessingNote = getValue(112323293);               // Copy PWO processing notes here:
+            let havePwo = getValue(112847017);                  // PWO
+            let copyProcessingNote = getValue(112323293);       // Copy PWO processing notes here:
+            let didPWOUsingInsulin = getValue(112323331);       // Did the HCP use the Enhanced PWO?
+            let doesPwoStateUsingInsulin = getValue(112323362); // Does the PWO state the patient is using insulin?
+            let doesPatientHipyEvents = getValue(112323371);    // Does the patient have hypoglycemic events?
             let hasPwoValid = getValue(112323265);              // Has the PWO been validated, and processing notes are in PIMS?
-            let enhancedPwo = getValue(112323331);              // Did the HCP use the Enhanced PWO?
-            let isPwoScanned = getValue(112323454);
-            let pwoScannedDate = getValue(112323455);
-            let pwoWhatBrand = getValue(112323458);
+            let isPwoScanned = getValue(112323454);             // Where is CGM PWO Scanned?
+            let pwoScannedDate = getValue(112323455);           // What date was the PWO scanned into PIMS?
+            let pwoWhereScanned = getValue(113223009);          // Where is PUMP PWO Scanned?
+            let pwoWhatBrand = getValue(112323458);             // The CGM PWO is for what Brand?
             let pwoStartDate = getValue(112323597);             // What is the start date of the PWO?
             let isDiagnosisCode = getValue(112323599);          // What is the diagnosis code?
             let diagnosisCode1 = getValue(112375535);           // Diagnosis Code
@@ -627,7 +612,21 @@ function joinValues() {
                     combinedString.push(`     ${copyProcessingNote}`);
                 }
             } else {
-                combinedString.push(`     PWO scanned under ${isPwoScanned}. (${pwoScannedDate}) – PWO for (${pwoWhatBrand}), supplies: Start (${pwoStartDate}), ${isDiagnosisCode}, ${diagnosisCode1}, site change: ${siteChange} (${treatingDoctorSignedPwo}) signed (${datePwoSigned})`);
+                let note = `     Pump PWO scanned (${pwoWhereScanned}) under ${isPwoScanned}. (${pwoScannedDate}) – PWO for (${pwoWhatBrand}), supplies: Start (${pwoStartDate}), ${isDiagnosisCode}, ${diagnosisCode1}, site change: ${siteChange} (${treatingDoctorSignedPwo}) signed (${datePwoSigned})`;
+
+                if (didPWOUsingInsulin !== "") {
+                    note = note + ` - Did the HCP use the Enhanced PWO? ${didPWOUsingInsulin}`;
+                }
+
+                if (doesPwoStateUsingInsulin !== "") {
+                    note = note + ` - Does the PWO state the patient is using insulin? ${doesPwoStateUsingInsulin}`;
+                }
+
+                if (doesPatientHipyEvents !== "") {
+                    note = note + ` - Does the patient have hypoglycemic events? ${doesPatientHipyEvents}`;
+                }
+
+                combinedString.push(note);
             }
         }
 
@@ -644,9 +643,11 @@ function joinValues() {
             let isDiagnosisCode = getValue(112323786);                  // What is the diagnosis code?
             let diagnosisCode = getValue(112375880);                    // Diagnosis Code
             let siteChangeInstruction = getValue(112430683);            // What are the site change instructions?
+            let other = getValue(113034625);                            // Other
             let usingInsulin = getValue(112323807);                     // Do the Clinical Notes state the patient is using insulin?
             let onPage = getValue(112323837);                           // On page:
             let hypoglycemicEvent = getValue(112323854);                // Does the patient have hypoglycemic events?
+            let onPage0 = getValue(113034731);                          // On page:
             let testFreq2Mth = getValue(113035642);                     // Patient Testing Frequency for the past 2 months
             let testFreq2MthPage = getValue(113037492);                 // On page:
             let injectFreq6Mth = getValue(113035644);                   // Patient Injection Frequency for the past 6 months
@@ -704,15 +705,40 @@ function joinValues() {
                     note = note + ` show (${isDiagnosisCode} ${diagnosisCode})`;
                 }
 
+                if (siteChangeInstruction !== "") {
+                    note = note + `${isComma ? `, ` : ``}What are the site change instructions? ${siteChangeInstruction}`;
+                    isComma = true;
+                }
+
+                if (other !== "") {
+                    note = note + `${isComma ? `, ` : ``}Other: ${other}`;
+                    isComma = true;
+                }
+
                 if (testFreq2Mth !== "" && injectFreq6Mth !== "") {
                     note = note + `${isComma ? `, ` : ``}Testing (${testFreq2Mth}) for at least 2 months on page (${testFreq2MthPage}) and (${injectFreq6Mth}) for 6 months on page (${injectFreq6MthPage}).`;
                     isComma = true;
                 }
     
-                // if (usingInsulin !== "") {
-                //     note = note + `${isComma ? `, ` : ``}${usingInsulin}`;
-                //     isComma = true;
-                // }
+                if (usingInsulin !== "") {
+                    note = note + `${isComma ? `, ` : ``}Do the Clinical Notes state the patient is using insulin? ${usingInsulin}`;
+                    isComma = true;
+                }
+    
+                if (onPage !== "") {
+                    note = note + `${isComma ? `, ` : ``}On page: ${onPage}`;
+                    isComma = true;
+                }
+    
+                if (hypoglycemicEvent !== "") {
+                    note = note + `${isComma ? `, ` : ``}Does the patient have hypoglycemic events? ${hypoglycemicEvent}`;
+                    isComma = true;
+                }
+    
+                if (onPage0 !== "") {
+                    note = note + `${isComma ? `, ` : ``}On page: ${onPage0}`;
+                    isComma = true;
+                }
     
                 if (clinicalNotes !== "") {
                     if (clinicalNotes === "Electronically signed") {
@@ -746,6 +772,9 @@ function joinValues() {
             let onPage1 = getValue(112323692);              // On page:
             let hypoglycemic = getValue(112323695);         // Does the patient have hypoglycemic events?
             let onPage2 = getValue(112324474);              // On page:
+            let patientTest2Mth = getValue(113121720);      // Patient Testing Frequency for the past 2 months
+            let onPage3 = getValue(113121728);              // On Page
+            let patientInj6th = getValue(113121725);        // Patient Injection Frequency for the past 6 months
             let isFace2Face = getValue(112323699);          // Face to Face is:
             let signedByFace2Face = getValue(112323704);    // Face to Face Electronically Signed by:
             let signedOnFace2Face = getValue(112323705);    // Face to Face Electronically Signed on Page:
@@ -793,9 +822,29 @@ function joinValues() {
                 if (usePatientInsulin !== "") {
                     note = note + `, ${usePatientInsulin}`;
                 }
+
+                if (onPage1 !== "") {
+                    note = note + `, On page: ${onPage1}`;
+                }
     
                 if (hypoglycemic !== "") {
                     note = note + `, Does the patient have hypoglycemic events? ${hypoglycemic}`;
+                }
+
+                if (onPage2 !== "") {
+                    note = note + `, On page: ${onPage2}`;
+                }
+
+                if (patientTest2Mth !== "") {
+                    note = note + `, Patient Testing Frequency for the past 2 months: ${patientTest2Mth}`;
+                }
+
+                if (onPage3 !== "") {
+                    note = note + `, On page: ${onPage3}`;
+                }
+
+                if (patientInj6th !== "") {
+                    note = note + `, Patient Injection Frequency for the past 6 months: ${patientInj6th}`;
                 }
     
                 // if (isFace2Face !== "") {
