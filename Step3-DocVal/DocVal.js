@@ -115,10 +115,13 @@ function joinValues() {
             let isParachuteOrder = getValue(112323077);         // Review the Workflow and special handling notes on the documentation tab.  Is this a Parachute Push Order?
             let patientIs = getValue(112323375);                // Patient is:
             let patientIs2 = getValue(112431416);               // Patient is:
-            // let requestDocTab = getValue(112343914);     // Removed
-            // let pushToParachute = getValue(112343929);   // Removed
+            let curPumpWarInf = getValue(113317353);            // Current Pump Warrantly Information
+            let dateCurPupShipped = getValue(113317374);        // Date current pump shipped
+            let insurancePiadCurpump = getValue(113317379);     // Insurance that paid for the current pump
+            let curPumpModel = getValue(113317380);             // Current Pump Model
+            let curPumpSerialNum = getValue(113317382);         // Current Pump Serial Number
 
-            let note = "";
+            let note = "     ";
             let isComma = false;
             if (goTo !== "") {
                 note = goTo;
@@ -190,6 +193,26 @@ function joinValues() {
             if (patientIs2 !== "") {
                 note = note + `${isComma ? `, ` : ``}Patient is ${patientIs2}`;
                 isComma = true;
+
+                if (patientIs2 === "On Pump Therapy") {
+                    if (curPumpWarInf === "CCS shipped the patient's current pump") {
+                        note = note + `${isComma ? `, ` : ``}Confirmed CCS shipped (${dateCurPupShipped})`;
+                        isComma = true;
+                    } else if (curPumpWarInf === "CCS did not ship the patient's current pump") {
+                        note = note + `${isComma ? `, ` : ``}Did not ship the patient's current pump (${dateCurPupShipped})`;
+                        isComma = true;
+                    }
+                }
+
+                if (insurancePiadCurpump !== "") {
+                    note = note + `${isComma ? `, ` : ``}Insurance that paid (${insurancePiadCurpump})`;
+                    isComma = true;
+                }
+
+                if (curPumpModel !== "" && curPumpSerialNum !== "") {
+                    note = note + `${isComma ? `, ` : ``}Current Pump Model/Serial Number: (${curPumpModel} ${curPumpSerialNum})`;
+                    isComma = true;
+                }
             }
 
             combinedString.push(`     `);
@@ -612,7 +635,15 @@ function joinValues() {
                     combinedString.push(`     ${copyProcessingNote}`);
                 }
             } else {
-                let note = `     Pump PWO scanned (${pwoWhereScanned}) under ${isPwoScanned}. (${pwoScannedDate}) – PWO for (${pwoWhatBrand}), supplies: Start (${pwoStartDate}), ${isDiagnosisCode}, ${diagnosisCode1}, site change: ${siteChange} (${treatingDoctorSignedPwo}) signed (${datePwoSigned})`;
+                if (pwoScannedDate !== "") {
+                    pwoScannedDate = `(${pwoScannedDate})`;
+                }
+
+                if (pwoWhatBrand !== "") {
+                    pwoWhatBrand = ` – PWO for (${pwoWhatBrand}),`;
+                }
+
+                let note = `     Pump PWO scanned (${pwoWhereScanned}) under ${isPwoScanned}. ${pwoScannedDate}${pwoWhatBrand} supplies: Start (${pwoStartDate}), ${isDiagnosisCode}, ${diagnosisCode1}, site change: ${siteChange} (${treatingDoctorSignedPwo}) signed (${datePwoSigned})`;
 
                 if (didPWOUsingInsulin !== "") {
                     note = note + ` - Did the HCP use the Enhanced PWO? ${didPWOUsingInsulin}`;
@@ -1140,10 +1171,10 @@ function joinValues() {
         // Parse fields one by one.
         const doConvertResult = () => {
             convertFirstLine();
-            convertSecondLine();
             convertThirdLine();
             convertConsentLine();
             convertInsuranceLines();
+            convertSecondLine();
             convertPacketApprovalLine();
 
             if (isValidPWO) {
